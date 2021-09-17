@@ -1,17 +1,11 @@
 import { Request, Response } from "https://deno.land/x/opine@1.7.2/mod.ts";
 import { create, verify } from "https://deno.land/x/djwt@v2.3/mod.ts";
-import { key } from "./key.ts";
+import { key } from "../util/key.ts";
 
 interface User {
   nickname: string;
   email: string;
   password: string;
-}
-
-interface Header {
-  header: {
-    authorization: string;
-  };
 }
 
 export class UserController {
