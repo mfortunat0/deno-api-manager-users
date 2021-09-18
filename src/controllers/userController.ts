@@ -19,7 +19,7 @@ export class UserController {
     const { nickname, email, password } = req.body as User;
 
     if (!nickname || !email || !password) {
-      res.setStatus(400).json();
+      return res.setStatus(400).json();
     }
 
     const user = {
@@ -29,7 +29,7 @@ export class UserController {
     };
 
     this.users.push(user);
-    res.setStatus(201).json(user);
+    return res.setStatus(201).json(user);
   }
 
   async login(req: Request, res: Response) {
@@ -37,13 +37,13 @@ export class UserController {
     if (token) {
       const payload = await verify(token, key);
       const id = (payload.id as number) ?? 0;
-      res.json(this.users[id]);
+      return res.setStatus(200).json(this.users[id]);
     }
 
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.setStatus(400).json();
+      return res.setStatus(400).json();
     }
 
     const id = this.users.findIndex(
@@ -52,11 +52,11 @@ export class UserController {
     const jwt = await create({ alg: "HS512", typ: "JWT" }, { id }, key);
 
     if (id > -1) {
-      res.setStatus(200).json({
+      return res.setStatus(200).json({
         token: jwt,
       });
     } else {
-      res.setStatus(204).json();
+      return res.setStatus(204).json();
     }
   }
 }
