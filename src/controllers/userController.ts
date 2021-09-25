@@ -1,5 +1,6 @@
 import { Request, Response } from "https://deno.land/x/opine@1.7.2/mod.ts";
 import { create, verify } from "https://deno.land/x/djwt@v2.3/mod.ts";
+import { SmtpClient } from "https://deno.land/x/smtp/mod.ts";
 import { key } from "../util/key.ts";
 
 interface User {
@@ -10,12 +11,14 @@ interface User {
 
 export class UserController {
   users: User[] = [];
+  client = new SmtpClient();
+
   constructor() {
     this.create = this.create.bind(this);
     this.login = this.login.bind(this);
   }
 
-  create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const { nickname, email, password } = req.body as User;
 
     if (!nickname || !email || !password) {
@@ -27,6 +30,23 @@ export class UserController {
       email,
       password,
     };
+
+    await this.client.connectTLS({
+      hostname: Deno.env.get("SMTP_HOSTNAME") || "",
+      port: Number(Deno.env.get("SMTP_PORT")) || 0,
+      username: Deno.env.get("SMTP_USERNAME") || "",
+      password: Deno.env.get("SMTP_PASSWORD") || "",
+    });
+
+    await this.client.send({
+      from: "matheus.xmaz10@gmail.com",
+      to: "nelson.homenick16@ethereal.email",
+      subject: "Mail Title",
+      content: "Mail Content",
+      html: "<a href='https://github.com'>Github</a>",
+    });
+
+    await this.client.close();
 
     this.users.push(user);
     return res.setStatus(201).json(user);
