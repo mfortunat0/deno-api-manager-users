@@ -1,4 +1,4 @@
-import { Request, Response } from "https://deno.land/x/opine@1.7.2/mod.ts";
+import { Request, Response } from "https://deno.land/x/opine@1.8.0/mod.ts";
 import { create, verify } from "https://deno.land/x/djwt@v2.3/mod.ts";
 import { SmtpClient } from "https://deno.land/x/smtp/mod.ts";
 import { key } from "../util/key.ts";

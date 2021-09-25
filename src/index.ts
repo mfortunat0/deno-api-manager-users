@@ -1,5 +1,5 @@
 import { config } from "https://raw.githubusercontent.com/daychongyang/dotenv/master/mod.ts";
-import { opine, json } from "https://deno.land/x/opine@1.7.2/mod.ts";
+import { opine, json } from "https://deno.land/x/opine@1.8.0/mod.ts";
 import { routes } from "./routes.ts";
 
 config();
